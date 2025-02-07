@@ -883,12 +883,14 @@ def run_cost_optimization_simulation(parameters , api_key):
                 #progress_percentage = int(((i + 1) / len(grouped)) * 100)
                 #progress_bar(progress_percentage)
 
+            selected_postcodes = ", ".join(parameters["selected_postcodes"]) if parameters["selected_postcodes"] else "All Postcodes"
+            selected_customers = ", ".join(parameters["selected_customers"]) if parameters["selected_customers"] else "All Customers"
 
             metrics = calculate_metrics(all_consolidated_shipments, df)
             st.markdown("<h2 style='font-size:24px;'>Identified cost savings and Key Performance Indicators (KPIs)</h2>", unsafe_allow_html=True)
             main_text = (
                 f"Through extensive analysis, the OPTIMAL SHIPMENT WINDOW was determined to be **{best_params[0]}**, "
-                f"with a PALLET SIZE of **46** for selected postcodes and customers. "
+                f"with a PALLET SIZE of **46** for **parameters[postcodes]**: {selected_postcodes} and **parameters[customers]**: {selected_customers}."
                 f"These optimizations resulted in SIGNIFICANT EFFICIENCY IMPROVEMENTS:\n\n"
 
                 f"**SHIPMENT WINDOW**: The most effective shipment window was identified as ****{best_params[0]} DAYS**.\n\n"
@@ -1103,115 +1105,116 @@ def cost_calculation(parameters, best_params):
 
             consolidated_df = pd.DataFrame(all_consolidated_shipments)
 
-            # Add Summary Metrics in Collapsible Section
-            with st.expander("View Detailed Metrics Summary", expanded=False):
-                # Calculate metrics for before consolidation
-                days_shipped_before = df['SHIPPED_DATE'].nunique()
-                total_pallets_before = df['Total Pallets'].sum()
-                pallets_per_day_before = total_pallets_before / days_shipped_before
-                total_orders_before = len(df)
-                pallets_per_shipment_before = total_pallets_before / total_orders_before  # Each order is a shipment
+            st.write("View Detailed Metrics Summary")
 
-                # Calculate metrics for after consolidation
-                days_shipped_after = consolidated_df['Date'].nunique()
-                total_pallets_after = consolidated_df['Total Pallets'].sum()
-                pallets_per_day_after = total_pallets_after / days_shipped_after
-                total_shipments_after = len(consolidated_df)
-                pallets_per_shipment_after = total_pallets_after / total_shipments_after
+            days_shipped_before = df['SHIPPED_DATE'].nunique()
+            total_pallets_before = df['Total Pallets'].sum()
+            pallets_per_day_before = total_pallets_before / days_shipped_before
+            total_orders_before = len(df)
+            pallets_per_shipment_before = total_pallets_before / total_orders_before  # Each order is a shipment
 
-                # Calculate percentage changes
-                days_change = ((days_shipped_after - days_shipped_before) / days_shipped_before) * 100
-                pallets_per_day_change = ((pallets_per_day_after - pallets_per_day_before) / pallets_per_day_before) * 100
-                pallets_per_shipment_change = ((pallets_per_shipment_after - pallets_per_shipment_before) / pallets_per_shipment_before) * 100
+            # Calculate metrics for after consolidation
+            days_shipped_after = consolidated_df['Date'].nunique()
+            total_pallets_after = consolidated_df['Total Pallets'].sum()
+            pallets_per_day_after = total_pallets_after / days_shipped_after
+            total_shipments_after = len(consolidated_df)
+            pallets_per_shipment_after = total_pallets_after / total_shipments_after
 
-                # Create three columns for before, after, and change metrics
-                col1, col2, col3 = st.columns(3)
+            # Calculate percentage changes
+            days_change = ((days_shipped_after - days_shipped_before) / days_shipped_before) * 100
+            pallets_per_day_change = ((pallets_per_day_after - pallets_per_day_before) / pallets_per_day_before) * 100
+            pallets_per_shipment_change = ((
+                                                       pallets_per_shipment_after - pallets_per_shipment_before) / pallets_per_shipment_before) * 100
 
-                # Style for metric display
-                metric_style = """
-                    <div style="
-                        background-color: #f0f2f6;
-                        padding: 0px;
-                        border-radius: 5px;
-                        margin: 5px 0;
-                    ">
-                        <span style="font-weight: bold;">{label}:</span> {value}
-                    </div>
-                """
+            # Create three columns for before, after, and change metrics
+            col1, col2, col3 = st.columns(3)
 
-                # Style for percentage changes
-                change_style = """
-                    <div style="
-                        background-color: #e8f0fe;
-                        padding: 0px;
-                        border-radius: 5px;
-                        margin: 5px 0;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                    ">
-                        <span style="font-weight: bold;">{label}:</span>
-                        <span style="color: {color}; font-weight: bold;">{value:+.1f}%</span>
-                    </div>
-                """
+            # Style for metric display
+            metric_style = """
+                                <div style="
+                                    background-color: #f0f2f6;
+                                    padding: 0px;
+                                    border-radius: 5px;
+                                    margin: 5px 0;
+                                ">
+                                    <span style="font-weight: bold;">{label}:</span> {value}
+                                </div>
+                            """
 
-                # Before consolidation metrics
-                with col1:
-                    st.markdown("##### Before Consolidation")
-                    st.markdown(metric_style.format(
-                        label="Days Shipped",
-                        value=f"{days_shipped_before:,}"
-                    ), unsafe_allow_html=True)
-                    st.markdown(metric_style.format(
-                        label="Pallets Shipped per Day",
-                        value=f"{pallets_per_day_before:.1f}"
-                    ), unsafe_allow_html=True)
-                    st.markdown(metric_style.format(
-                        label="Pallets per Shipment",
-                        value=f"{pallets_per_shipment_before:.1f}"
-                    ), unsafe_allow_html=True)
+            # Style for percentage changes
+            change_style = """
+                                <div style="
+                                    background-color: #e8f0fe;
+                                    padding: 0px;
+                                    border-radius: 5px;
+                                    margin: 5px 0;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                ">
+                                    <span style="font-weight: bold;">{label}:</span>
+                                    <span style="color: {color}; font-weight: bold;">{value:+.1f}%</span>
+                                </div>
+                            """
 
-                # After consolidation metrics
-                with col2:
-                    st.markdown("##### After Consolidation")
-                    st.markdown(metric_style.format(
-                        label="Days Shipped",
-                        value=f"{days_shipped_after:,}"
-                    ), unsafe_allow_html=True)
-                    st.markdown(metric_style.format(
-                        label="Pallets Shipped per Day",
-                        value=f"{pallets_per_day_after:.1f}"
-                    ), unsafe_allow_html=True)
-                    st.markdown(metric_style.format(
-                        label="Pallets per Shipment",
-                        value=f"{pallets_per_shipment_after:.1f}"
-                    ), unsafe_allow_html=True)
+            # Before consolidation metrics
+            with col1:
+                st.markdown("##### Before Consolidation")
+                st.markdown(metric_style.format(
+                    label="Days Shipped",
+                    value=f"{days_shipped_before:,}"
+                ), unsafe_allow_html=True)
+                st.markdown(metric_style.format(
+                    label="Pallets Shipped per Day",
+                    value=f"{pallets_per_day_before:.1f}"
+                ), unsafe_allow_html=True)
+                st.markdown(metric_style.format(
+                    label="Pallets per Shipment",
+                    value=f"{pallets_per_shipment_before:.1f}"
+                ), unsafe_allow_html=True)
 
-                # Percentage changes
-                with col3:
-                    st.markdown("##### Percentage Change")
-                    st.markdown(change_style.format(
-                        label="Days Shipped",
-                        value=days_change,
-                        color="blue" if days_change > 0 else "green"
-                    ), unsafe_allow_html=True)
-                    st.markdown(change_style.format(
-                        label="Pallets Shipped per Day",
-                        value=pallets_per_day_change,
-                        color="green" if pallets_per_day_change > 0 else "red"
-                    ), unsafe_allow_html=True)
-                    st.markdown(change_style.format(
-                        label="Pallets per Shipment",
-                        value=pallets_per_shipment_change,
-                        color="green" if pallets_per_shipment_change > 0 else "red"
-                    ), unsafe_allow_html=True)
+            # After consolidation metrics
+            with col2:
+                st.markdown("##### After Consolidation")
+                st.markdown(metric_style.format(
+                    label="Days Shipped",
+                    value=f"{days_shipped_after:,}"
+                ), unsafe_allow_html=True)
+                st.markdown(metric_style.format(
+                    label="Pallets Shipped per Day",
+                    value=f"{pallets_per_day_after:.1f}"
+                ), unsafe_allow_html=True)
+                st.markdown(metric_style.format(
+                    label="Pallets per Shipment",
+                    value=f"{pallets_per_shipment_after:.1f}"
+                ), unsafe_allow_html=True)
 
+            # Percentage changes
+            with col3:
+                st.markdown("##### Percentage Change")
+                st.markdown(change_style.format(
+                    label="Days Shipped",
+                    value=days_change,
+                    color="blue" if days_change > 0 else "green"
+                ), unsafe_allow_html=True)
+                st.markdown(change_style.format(
+                    label="Pallets Shipped per Day",
+                    value=pallets_per_day_change,
+                    color="green" if pallets_per_day_change > 0 else "red"
+                ), unsafe_allow_html=True)
+                st.markdown(change_style.format(
+                    label="Pallets per Shipment",
+                    value=pallets_per_shipment_change,
+                    color="green" if pallets_per_shipment_change > 0 else "red"
+                ), unsafe_allow_html=True)
+
+                st.text("")
 
             charts = create_heatmap_and_bar_charts(consolidated_df, df, start_date, end_date)
 
             years_in_range = set(pd.date_range(start_date, end_date).year)
 
-            with st.expander("Charts for 2023 and 2024 (Before & After Consolidation)"):
+            with st.expander("Heatmap Analysis Charts(Before & After Consolidation)"):
                 for year in [2023, 2024]:
                     if year in years_in_range:
                         chart_original, chart_consolidated, bar_comparison = charts[year]
@@ -1244,9 +1247,6 @@ def cost_calculation(parameters, best_params):
                             - Optimized cost savings through better utilization and fewer underfilled shipments.
                             - Enhanced planning efficiency, enabling better decision-making for future shipment scheduling.
                             """)
-
-
-
 
 
                     # Show calendar heatmaps

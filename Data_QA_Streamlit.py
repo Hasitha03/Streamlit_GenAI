@@ -554,26 +554,19 @@ def get_sample_queries(data_source):
     """Return appropriate sample queries based on the selected data source."""
     queries = {
         'Outbound_Data.csv': [
-            "Plot the bar chart for short postcode 'LU' in which x axis is number of pallets and y axis is total orders. Stack them on the basis of prod type.",
-            "Which postcode results in the highest total cost?",
-            "What is the monthly trend in total cost?",
-            "What is the average cost per pallet for each PROD TYPE and how does it vary across the following SHORT_POSTCODE regions: CV, NG, NN, RG?",
-            "Identify the distribution of cost per pallet, is it normally distributed?",
-            "Generate a radar chart of average pallets per order for the top 15 postcodes with maximum average cost per order.",
-            "Generate the boxplot distribution for pallets of the top 8 customers by total orders.",
-            "For ambient product type, which are the top 5 customers with total orders > 10 and highest standard deviation in cost per pallet?",
-            "What is the trend in cost over time and plot forecasted cost using 3-month exponential smoothing?",
-            "Perform a hypothesis test to analyze if average cost per order differs significantly with product type.",
-            "Create a regression line for cost per order and distance along with R squared.",
-            "What is the distribution of cost in percentiles?",
-            "How does the cost per order vary with distance within each PROD TYPE?",
-            "Find the top 5 customers by total pallets shipped and compare their average cost per pallet and distance traveled.",
-            "Identify the SHORT_POSTCODE areas with the highest total shipping costs and also mention their cost per pallet.",
-            "Which customer has the highest total shipping cost over time, and how does its cost trend vary by month?",
-            "What is the order frequency per week for the last 2 months?",
-            "What is the total cost for ambient product type in January 2024?",
-            "How has the cost per pallet evolved over the last 3 months?",
-            "What is the average cost per pallet for each product type?"
+
+    "What is the monthly trend in total cost?",
+    "What is the average cost per pallet for each PROD TYPE and how does it vary across the following SHORT_POSTCODE regions: CV, NG, NN, RG?",
+    "Which customer has the highest total shipping cost over time, and how does its cost trend vary by month?",
+    "Identify the SHORT_POSTCODE areas with the highest total shipping costs and also mention their cost per pallet.",
+    "For ambient product type, which are the top 5 customers with total orders > 10 and highest standard deviation in cost per pallet?",
+    "How does the cost per order vary with distance within each PROD TYPE?",
+    "How can I optimize the shipment costs for user ALLOGA UK in January?",
+    "What is the cost saving for postal codes NG, LU and NN in Feb 2024 if we consolidate?",
+    "How can we save spends for Tesco grocery dept in the month of March?",
+    "How can I improve my cost savings for first quarter of 2024 for customer Sainsbury's Supermarket?",
+    "How can we optimise spends for customer Boots Company PLC for the month of Feb to maximise efficiency?",
+    "What are the best ways to reduce shipment costs for B & M Ltd Retail while maintaining service efficiency?"
         ],
         'Inventory_Batch.csv': [
             "What is the total inventory value by product category?",
