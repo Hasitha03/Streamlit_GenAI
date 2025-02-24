@@ -890,7 +890,7 @@ def run_cost_optimization_simulation(parameters , api_key):
             st.markdown("<h2 style='font-size:24px;'>Identified cost savings and Key Performance Indicators (KPIs)</h2>", unsafe_allow_html=True)
             main_text = (
                 f"Through extensive analysis, the OPTIMAL SHIPMENT WINDOW was determined to be **{best_params[0]}**, "
-                f"with a PALLET SIZE of **46** for **parameters[postcodes]**: {selected_postcodes} and **parameters[customers]**: {selected_customers}."
+                f"with a PALLET SIZE of **46** for **postcodes**: {selected_postcodes} and **customers**: {selected_customers}."
                 f"These optimizations resulted in SIGNIFICANT EFFICIENCY IMPROVEMENTS:\n\n"
 
                 f"**SHIPMENT WINDOW**: The most effective shipment window was identified as ****{best_params[0]} DAYS**.\n\n"

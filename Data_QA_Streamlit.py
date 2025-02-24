@@ -798,6 +798,19 @@ def main():
             elif intent == 'Cost Optimization':
                 #st.write("It is cost optimization prompt\n")
 
+                file_path = 'Complete Input.xlsx'  # Change this to your actual file path
+                pallet_file = 'Cost per pallet.xlsx'
+                df = pd.read_excel(file_path)
+                dff = pd.read_excel(pallet_file)
+                columns_to_remove = ["SHIPPED_DATE", "Total Pallets", "Distance"]  # Replace with actual column names
+                df_filtered = df.drop(columns=columns_to_remove)
+                df_filtered["ORDER_ID"] = df_filtered["ORDER_ID"].astype(str)
+                # Display in Streamlit
+                with st.expander("📂 Additional Datasets Utilized ", expanded=False):
+                    st.dataframe(df_filtered.head())
+                    st.write("~ **Cost per each pallet for different postcodes** ⬇️")
+                    st.dataframe(dff.head())
+
                 parameters = parameter_values.get_parameters_values(api_key, query)
                 #st.write(parameters)  ## checkkk
 
